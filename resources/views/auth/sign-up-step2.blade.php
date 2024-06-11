@@ -26,8 +26,8 @@
             </div>
         </div>
 
-        <div id="div-membership-id" class="mt-4 hidden">
-            <x-input-label for="membershipid" :value="__('Membership Id')" />
+        <div id="div-membership-id" class="mt-4">
+            <x-input-label for="membershipid" :value="__('MembershipId If your are a Cosnet Member')" />
 
             <x-text-input id="membershipid" class="block mt-1 w-full"
                             type="text"
@@ -49,18 +49,3 @@
         </div>
     </form>
 </x-guest-layout>
-<script>
-    const radioCosnetMember = document.getElementById("cosnetmember");
-    const radioNotCosnetMember = document.getElementById("notcosnetmember");
-    const divMembershipId = document.getElementById("div-membership-id");
-    radioCosnetMember.addEventListener('change', function(event){
-        if (radioCosnetMember.checked === true){
-            divMembershipId.classList.remove('hidden');
-        }
-    })
-    radioNotCosnetMember.addEventListener('change', function(event){
-        if (radioNotCosnetMember.checked === true){
-            divMembershipId.classList.add('hidden');
-        }
-    })
-</script>

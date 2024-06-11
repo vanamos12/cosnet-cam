@@ -21,6 +21,8 @@ Route::middleware('guest')->group(function () {
     Route::get('sign-up-step2', [RegisteredUserController::class, 'signUpStep2Create'])
                 ->name('sign-up-step2');
 
+    Route::post('sign-up-step2', [RegisteredUserController::class, 'signUpStep2Store']);
+
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
 
