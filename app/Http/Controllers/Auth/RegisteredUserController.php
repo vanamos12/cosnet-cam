@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
         ]);
 
-        $code = \str()->random(4);
+        $code = strval(mt_rand(100000, 999999));
 
         // Send the email
         Mail::to($request->email)->send(new ValidateEmail($code));
@@ -57,6 +57,10 @@ class RegisteredUserController extends Controller
     public function signUpStep2Store(Request $request): RedirectResponse
     {
         $validator = Validator::make([], []);
+
+        $membershipid = trim($request->membershipid);
+        $token = env('COSNET_TOKEN');
+
         // Verify the code
         $codeReceived = $request->code;
         $code = $request->session()->pull('code');
@@ -68,11 +72,16 @@ class RegisteredUserController extends Controller
 
         // Not a cosnet Member
         if ($request->cosnetmember == 'notcosnetmember'){
+            $request->session()->put("user", [
+                "first_name" => "",
+                "last_name" => "",
+                "membershipid" => "TEMP-0001",
+
+            ]);
             return redirect(route('register', absolute: false));
         }else{
             // Validate and get the data of the membershipid
-            $membershipid = trim($request->membershipid);
-            $token = env('COSNET_TOKEN');
+            
 
             $response = Http::withoutVerifying()
             ->withUrlParameters([
@@ -88,7 +97,13 @@ class RegisteredUserController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }else{
                 // success
-                dd($json);
+                //dd($json);
+                $request->session()->put("user", [
+                    "first_name" => $json["data"]["firstName"],
+                    "last_name" => $json["data"]["lastName"],
+                    "membershipid" => $membershipid,
+                ]);
+                return redirect(route('register', absolute: false));
             }
         }
 
@@ -102,7 +117,17 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $email = request()->session()->get('email');
+        $user = request()->session()->get('user');
+        $fisrt_name = $user['first_name'];
+        $last_name = $user['last_name'];
+        $membershipid = $user['membershipid'];
+        return view('auth.register', [
+            "first_name" => $fisrt_name,
+            "last_name" => $last_name,
+            "membershipid" => $membershipid,
+            "email" => $email
+        ]);
     }
 
     /**
