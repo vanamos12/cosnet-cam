@@ -56,6 +56,11 @@ class RegisteredUserController extends Controller
 
     public function signUpStep2Store(Request $request): RedirectResponse
     {
+        $request->validate([
+            'membershipid' => ['nullable', 'string', 'max:50'],
+            'code' => ['required', 'numeric', 'max:999999', 'min:100000']
+        ]);
+
         $validator = Validator::make([], []);
 
         $membershipid = trim($request->membershipid);
@@ -86,8 +91,8 @@ class RegisteredUserController extends Controller
             $response = Http::withoutVerifying()
             ->withUrlParameters([
                 'endpoint' => 'https://mycosnet.org/main/get_membership_details.php',
-                'token' => $token,
-                'membershipid' => $membershipid,
+                'token' => urlencode($token),
+                'membershipid' => urlencode($membershipid),
             ])
             ->get("{+endpoint}?token={token}&membershipid={membershipid}");
             $json = $response->json();
