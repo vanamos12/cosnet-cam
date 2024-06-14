@@ -47,10 +47,10 @@ class RegisteredUserController extends Controller
 
     public function signUpStep2Create(Request $request): View
     {
-        $step = $request->session()->pull('step');
-        //if ($step !== 'step2'){
-        //    return view('auth.sign-up-step1');
-        //}
+        $step = $request->session()->get('step');
+        if ($step !== 'step2'){
+            return redirect(route('sign-up-step1', absolute:false));
+        }
         return view('auth.sign-up-step2');
     }
 
@@ -64,11 +64,11 @@ class RegisteredUserController extends Controller
         $validator = Validator::make([], []);
 
         $membershipid = trim($request->membershipid);
-        $token = env('COSNET_TOKEN');
+        $token = config('cosnet.token');
 
         // Verify the code
         $codeReceived = $request->code;
-        $code = $request->session()->pull('code');
+        $code = $request->session()->get('code');
 
         if ($code !== $codeReceived){
             $validator->errors()->add('code', 'The code received is not correct');
@@ -83,6 +83,7 @@ class RegisteredUserController extends Controller
                 "membershipid" => "TEMP-0001",
 
             ]);
+            $request->session()->put('step', 'step3');
             return redirect(route('register', absolute: false));
         }else{
             // Validate and get the data of the membershipid
@@ -102,12 +103,12 @@ class RegisteredUserController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }else{
                 // success
-                //dd($json);
                 $request->session()->put("user", [
                     "first_name" => $json["data"]["firstName"],
                     "last_name" => $json["data"]["lastName"],
                     "membershipid" => $membershipid,
                 ]);
+                $request->session()->put('step', 'step3');
                 return redirect(route('register', absolute: false));
             }
         }
@@ -120,8 +121,13 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $step = $request->session()->get('step');
+        if ($step !== 'step3'){
+            return redirect(route('sign-up-step1', absolute:false));
+        }
+
         $email = request()->session()->get('email');
         $user = request()->session()->get('user');
         $fisrt_name = $user['first_name'];

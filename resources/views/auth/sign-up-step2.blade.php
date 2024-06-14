@@ -4,7 +4,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="code" :value="__('Code Received')" />
+            <x-input-label for="code" :value="__('Code Received').' '.session('code', 'vide')" />
 
             <x-text-input id="code" class="block mt-1 w-full"
                             type="password"
