@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,10 +19,26 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'membershipid',
+        'phone',
+        'state',
+        'town',
         'email',
         'password',
+        'email_verified_at',
+        'remember_token',
     ];
+
+    public function members():HasMany{
+        return $this->hasMany(Member::class);
+    }
+
+    public function change_names(): MorphMany
+    {
+        return $this->morphMany(ChangeName::class, 'change_name_able');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

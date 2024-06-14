@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utils\Membership;
+use App\Http\Utils\Name;
 use App\Mail\ValidateEmail;
+use App\Models\ChangeName;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -80,8 +85,8 @@ class RegisteredUserController extends Controller
             $request->session()->put("user", [
                 "first_name" => "",
                 "last_name" => "",
-                "membershipid" => "TEMP-0001",
-
+                "membershipid" => Membership::genTempMembershipId(),
+                "status" => "not_cosnet_member"
             ]);
             $request->session()->put('step', 'step3');
             return redirect(route('register', absolute: false));
@@ -107,6 +112,7 @@ class RegisteredUserController extends Controller
                     "first_name" => $json["data"]["firstName"],
                     "last_name" => $json["data"]["lastName"],
                     "membershipid" => $membershipid,
+                    "status" => "cosnet_member"
                 ]);
                 $request->session()->put('step', 'step3');
                 return redirect(route('register', absolute: false));
@@ -149,21 +155,54 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'membershipid' => ['required', 'string', 'max:255', 'unique:'.User::class],
+            'state' => ['required', 'string', 'max:255'],
+            'town' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        DB::transaction(function() use ($request) {
+            $userSession = session('user');
+            $email = session('email');
+            $user = User::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+                'membershipid' => $userSession['membershipid'],
+                'state' => $request->state,
+                'town' => $request->town,
+                'email' => $email,
+                'password' => Hash::make($request->password),
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
+            ]);
 
-        event(new Registered($user));
+            event(new Registered($user));
 
-        Auth::login($user);
+            Auth::login($user);
 
+            // If the name has changed
+            if ($userSession["status"] == 'cosnet_member'
+                && 
+                !Name::isSameName($userSession['first_name'], $userSession['last_name'], $request->first_name, $request->last_name)){
+                
+                ChangeName::create([
+                    'first_name' => $userSession['first_name'],
+                    'last_name' => $userSession['last_name'],
+                    'change_name_able_id' => $user->id,
+                    'change_name_able_type' => User::class
+                ]);
+            }
+
+        });
+
+        
+
+        
         return redirect(route('dashboard', absolute: false));
     }
 }
