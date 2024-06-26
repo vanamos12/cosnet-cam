@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\SignUpStep2Request;
 use App\Http\Utils\Membership;
 use App\Http\Utils\Name;
 use App\Mail\ValidateEmail;
@@ -59,26 +61,13 @@ class RegisteredUserController extends Controller
         return view('auth.sign-up-step2');
     }
 
-    public function signUpStep2Store(Request $request): RedirectResponse
+    public function signUpStep2Store(SignUpStep2Request $request): RedirectResponse
     {
-        $request->validate([
-            'membershipid' => ['nullable', 'string', 'max:50'],
-            'code' => ['required', 'numeric', 'max:999999', 'min:100000']
-        ]);
 
         $validator = Validator::make([], []);
 
-        $membershipid = trim($request->membershipid);
         $token = config('cosnet.token');
-
-        // Verify the code
-        $codeReceived = $request->code;
-        $code = $request->session()->get('code');
-
-        if ($code !== $codeReceived){
-            $validator->errors()->add('code', 'The code received is not correct');
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        $membershipid = trim($request->membershipid);
 
         // Not a cosnet Member
         if ($request->cosnetmember == 'notcosnetmember'){
@@ -103,10 +92,7 @@ class RegisteredUserController extends Controller
             ->get("{+endpoint}?token={token}&membershipid={membershipid}");
             $json = $response->json();
 
-            if ($json['status'] !== 'success'){
-                $validator->errors()->add('membershipid', $json['message']);
-                return redirect()->back()->withErrors($validator)->withInput();
-            }else{
+            if ($json && $json['status'] == 'success'){
                 // success
                 $request->session()->put("user", [
                     "first_name" => $json["data"]["firstName"],
@@ -116,12 +102,21 @@ class RegisteredUserController extends Controller
                 ]);
                 $request->session()->put('step', 'step3');
                 return redirect(route('register', absolute: false));
+            }else{
+                if ($json){
+                    $validator->errors()->add('membershipid', $json['message']);
+                }else{
+                    $validator->errors()->add('membershipid', 'Something went wrong!');
+                }
+                
+                return redirect()->back()->withErrors($validator)->withInput();
+                
             }
         }
 
 
         // redirected to register
-        return redirect(route('sign-up-step2', absolute: false));
+        //return redirect(route('sign-up-step2', absolute: false));
     }
 
     /**
@@ -152,34 +147,18 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'membershipid' => ['required', 'string', 'max:255', 'unique:'.User::class],
-            'state' => ['required', 'string', 'max:255'],
-            'town' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
         DB::transaction(function() use ($request) {
             $userSession = session('user');
-            $email = session('email');
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'membershipid' => $userSession['membershipid'],
-                'state' => $request->state,
-                'town' => $request->town,
-                'email' => $email,
-                'password' => Hash::make($request->password),
-                'email_verified_at' => now(),
-                'remember_token' => Str::random(10),
-            ]);
+
+            $attributes = $request->all();
+            $attributes['membershipid'] = $userSession['membershipid'];
+            $attributes['email'] = session('email');
+            $attributes['email_verified_at'] = now();
+            $attributes['remember_token'] = Str::random(10);
+            $user = User::create($attributes);
 
             event(new Registered($user));
 
@@ -200,9 +179,6 @@ class RegisteredUserController extends Controller
 
         });
 
-        
-
-        
         return redirect(route('dashboard', absolute: false));
     }
 }
