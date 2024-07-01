@@ -1,6 +1,6 @@
 @props(['disabled' => false, 'values' => [], 'selected' => 1])
 
-<select {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!}>
+<select {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'border border-1 px-2 py-3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!}>
     @foreach ($values as $key => $value)
         <option value="{{ $key }}" @if ($key == $selected)
             selected

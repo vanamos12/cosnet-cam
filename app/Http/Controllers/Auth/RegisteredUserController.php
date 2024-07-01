@@ -82,10 +82,10 @@ class RegisteredUserController extends Controller
         }else{
             // Validate and get the data of the membershipid
             
-
+            $url = config('cosnet.url_details_user');
             $response = Http::withoutVerifying()
             ->withUrlParameters([
-                'endpoint' => 'https://mycosnet.org/main/get_membership_details.php',
+                'endpoint' => $url,
                 'token' => urlencode($token),
                 'membershipid' => urlencode($membershipid),
             ])
