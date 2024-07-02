@@ -1,5 +1,6 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('sign-up-step2') }}">
+    <form method="POST" action="{{ route('sign-up-step2') }}"
+        x-data="{ 'toggleMembershipId': {{ old('cosnetmember') === 'cosnetmember' ? 'true' : 'false'}} }">
         @csrf
 
         <!-- Password -->
@@ -17,16 +18,22 @@
         <!-- Name -->
         <div class="mt-4 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <x-radio-input  id="cosnetmember" class="inline-block mt-1"  name="cosnetmember" required value="cosnetmember" />
+                <x-radio-input  id="cosnetmember" class="inline-block mt-1"  name="cosnetmember" required value="cosnetmember" 
+                    :checked="old('cosnetmember') == 'cosnetmember' ? true : false"
+                    @click="toggleMembershipId=true"  
+                    />
                 <x-input-label  for="cosnetmember" :value="__('Cosnet Member')" />
             </div>
             <div class="flex items-center gap-2">
-                <x-radio-input  id="notcosnetmember" class="inline-block mt-1"  name="cosnetmember" required value="notcosnetmember" />
+                <x-radio-input  id="notcosnetmember" class="inline-block mt-1"  name="cosnetmember" required value="notcosnetmember" 
+                    @click="toggleMembershipId=false" 
+                    :checked="old('cosnetmember') == 'notcosnetmember' ? true : false"
+                     />
                 <x-input-label  for="notcosnetmember" :value="__('Not a Cosnet Member')" />
             </div>
         </div>
 
-        <div id="div-membership-id" class="mt-4">
+        <div id="div-membership-id" class="mt-4" x-show="toggleMembershipId">
             <x-input-label for="membershipid" :value="__('MembershipId If your are a Cosnet Member')" />
 
             <x-text-input id="membershipid" class="block mt-1 w-full"
