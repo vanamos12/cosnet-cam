@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateMemberRequest;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class MemberController extends Controller
 {
@@ -13,7 +16,7 @@ class MemberController extends Controller
     public function index()
     {
         //
-        $members = Auth::user()->members;
+        $members = Member::where('user_id', Auth::user()->id)->latest()->paginate(5);
         return view('members.index', compact('members'));
     }
 
@@ -29,9 +32,26 @@ class MemberController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateMemberRequest $request)
     {
         //
+        $attributes = $request->except(['cni_recto', 'cni_verso']);
+        $attributes['membershipid'] = "PENDING";
+
+        $member = Auth::user()->members()->create($attributes);
+
+        if($request->cni_recto){
+            $path = $request->cni_recto->store('media');
+            $member->cni_recto = $path;
+        }
+
+        if($request->cni_verso){
+            $path = $request->cni_verso->store('media');
+            $member->cni_verso = $path;
+        }
+        $member->save();
+
+        return Redirect::route('member.index')->with('success', 'Member saved!');
     }
 
     /**

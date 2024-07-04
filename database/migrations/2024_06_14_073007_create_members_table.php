@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('membershipid');
             $table->string('phone')->nullable();
+            $table->date('birthday');
+            $table->string('town');
             $table->string('email');
+            $table->string('cni_number')->nullable();
             $table->string('cni_recto')->nullable();
             $table->string('cni_verso')->nullable();
             $table->foreignIdFor(User::class);

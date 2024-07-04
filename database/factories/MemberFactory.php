@@ -21,8 +21,11 @@ class MemberFactory extends Factory
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'membershipid' => "PENDING",
+            'town' => "Douala",
             'email' => fake()->unique()->safeEmail(),
+            'birthday' => '1990-09-01',
             'phone' => fake()->phoneNumber(),
+            'cni_number' => '',
             'cni_recto'  => '',
             'cni_verso' => ''
         ];
