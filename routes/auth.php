@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 //Route::group(function () {
@@ -45,6 +46,30 @@ use Illuminate\Support\Facades\Route;
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.store');
 //});
+
+Route::middleware('auth')->controller(MemberController::class)->group(function (){
+
+    Route::get('/members', 'index')->name('member.index');
+
+    Route::get('/members/create', 'create')->name('member.create');
+
+    Route::get('/members/{member}', 'show')->name('member.show');
+
+    Route::post('/members', 'store')->name('member.store');
+
+    // Edit
+    // Route::get('/jobs/{job}/edit', 'edit')->middleware(['auth', 'can:edit-job,job']);
+    // Route::get('/jobs/{job}/edit', 'edit')->middleware('auth')->can('edit-job', 'job');
+    Route::get('/members/{member}/edit', 'edit')->can('edit', 'member')->name('member.edit');
+
+    // Update
+    Route::patch('/members/{member}', 'update')->name('member.update');
+
+    // Destroy
+    Route::delete('/members/{member}', 'destroy')->name('member.destroy');
+
+
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)

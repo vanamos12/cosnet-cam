@@ -37,7 +37,9 @@
 
         <!-- ===== Main Content Start ===== -->
         <main>
-          {{ $slot }}
+          <div class="mx-auto max-w-7xl p-4 md:p-6 2xl:p-10">
+            {{ $slot }}
+          </div>
         </main>
         <!-- ===== Main Content End ===== -->
       </div>
