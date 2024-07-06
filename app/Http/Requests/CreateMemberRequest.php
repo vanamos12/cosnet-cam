@@ -25,9 +25,9 @@ class CreateMemberRequest extends FormRequest
     {
         return [
             //
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'town' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'min:2', 'max:255'],
+            'last_name' => ['required', 'string', 'min:2', 'max:255'],
+            'town' => ['required', 'string', 'min:2', 'max:255'],
             'cni_number' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'birthday' => ['required', 'date', new MoreThanXYears],

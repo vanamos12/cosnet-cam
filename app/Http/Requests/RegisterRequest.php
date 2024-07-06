@@ -25,12 +25,12 @@ class RegisterRequest extends FormRequest
     {
         return [
             //
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'min:2', 'max:255'],
+            'last_name' => ['required', 'string', 'min:2', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'membershipid' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'state' => ['required', 'string', 'max:255'],
-            'town' => ['required', 'string', 'max:255'],
+            'town' => ['required', 'string', 'min:2', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
