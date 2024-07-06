@@ -53,7 +53,7 @@
             "Wyoming" => "Wyoming"
         ];
     @endphp
-    
+
     <x-flash-success />
 
     <x-flash-error />
@@ -209,6 +209,7 @@
             <form method="POST" action="{{ route('password.update') }}">
             @csrf
             @method('put')
+            
             <div class="p-6.5">
                 <!-- Password -->
                 <div class="mb-4.5">
@@ -220,7 +221,7 @@
                                     name="current_password"
                                     required autocomplete="new-password" />
 
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
                 </div>
 
                 <!-- Password -->
@@ -233,7 +234,7 @@
                                     name="password"
                                     required autocomplete="new-password" />
 
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
                 </div>
 
                 <!-- Confirm Password -->
@@ -246,13 +247,13 @@
                                     autocomplete="re-enter-password"
                                     name="password_confirmation" required autocomplete="new-password" />
 
-                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                    <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
                 </div>
 
                 <button
                 class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
                 >
-                Sign Up
+                Change Password
                 </button>
             </div>
             </form>
