@@ -8,11 +8,11 @@
             <a href="{{ route('member.create') }}"
                 class="flex py-3 px-6 font-bold  items-center justify-center rounded-md bg-primary text-white hover:bg-opacity-90"
             >
-            Create
+            Add Member
             </a>
         </div>
 
-        @unless(empty($members))
+        @unless(!count($members))
             <div class="max-w-full overflow-x-auto">
                 <div class="min-w-[1170px]">
                     <!-- table header start -->
@@ -124,7 +124,7 @@
            </div> 
         @endunless
 
-        @unless(!empty($members))
+        @unless(count($members))
             <p>You don't have members.</p>
         @endunless
         

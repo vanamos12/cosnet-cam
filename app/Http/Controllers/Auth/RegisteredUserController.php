@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
         return redirect(route('sign-up-step2', absolute: false));
     }
 
-    public function signUpStep2Create(Request $request): View
+    public function signUpStep2Create(Request $request)
     {
         $step = $request->session()->get('step');
         if ($step !== 'step2'){
@@ -122,7 +122,7 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(Request $request): View
+    public function create(Request $request)
     {
         $step = $request->session()->get('step');
         if ($step !== 'step3'){
