@@ -1,12 +1,3 @@
-import "../../css/tailadmin/simple-datatables.css";
-import "../../css/tailadmin/satoshi.css";
-import "jsvectormap/dist/jsvectormap.css";
-import "flatpickr/dist/flatpickr.min.css";
-import "nouislider/dist/nouislider.css";
-import "dropzone/dist/dropzone.css";
-import "../../css/tailadmin/style.css";
-
-
 
 import Alpine from "alpinejs";
 import persist from "@alpinejs/persist";

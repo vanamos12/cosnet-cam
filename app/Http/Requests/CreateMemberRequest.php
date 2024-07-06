@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\MoreThan21Years;
+use App\Rules\MoreThanXYears;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
@@ -30,7 +30,7 @@ class CreateMemberRequest extends FormRequest
             'town' => ['required', 'string', 'max:255'],
             'cni_number' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-            'birthday' => ['required', 'date', new MoreThan21Years],
+            'birthday' => ['required', 'date', new MoreThanXYears],
             'cni_recto' => ['nullable', 'file', File::types(['png', 'jpg', 'webp', 'jpeg', 'gif']), 'max:1024'],
             'cni_verso' => ['nullable', 'file', File::types(['png', 'jpg', 'webp', 'jpeg', 'gif']), 'max:1024']
         ];

@@ -16,7 +16,7 @@ class MemberController extends Controller
     public function index()
     {
         //
-        $members = Member::where('user_id', Auth::user()->id)->latest()->paginate(5);
+        $members = Auth::user()->members()->latest()->paginate(5);
         return view('members.index', compact('members'));
     }
 

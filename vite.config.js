@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/css/tailadmin/style.css',
                 'resources/js/tailadmin/index.js',
             ],
             refresh: true,

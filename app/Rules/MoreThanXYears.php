@@ -3,9 +3,10 @@
 namespace App\Rules;
 
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class MoreThan21Years implements ValidationRule
+class MoreThanXYears implements ValidationRule
 {
     /**
      * Run the validation rule.
@@ -15,8 +16,9 @@ class MoreThan21Years implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         //
-        if (intval(date('Y'))-intval(explode('-',$value)[0]) < 21){
-            $fail('You must have more than 21 years');
+        $min_age = config('cosnet.member_min_age');
+        if (Carbon::parse($value)->age < $min_age){
+            $fail("You must must be over $min_age years old.");
         }
     }
 }

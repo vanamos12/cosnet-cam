@@ -1,5 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+@import "./simple-datatables.css";
+@import "./satoshi.css";
+@import "jsvectormap/dist/jsvectormap.css";
+@import "flatpickr/dist/flatpickr.min.css";
+@import "nouislider/dist/nouislider.css";
+@import "dropzone/dist/dropzone.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

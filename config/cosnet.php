@@ -11,6 +11,6 @@ return [
     |
     */
     'token' => env('COSNET_TOKEN'),
-    'url_details_user' => env('COSNET_URL_DETAILS_USER')
-
+    'url_details_user' => env('COSNET_URL_DETAILS_USER'),
+    'member_min_age' => env('COSNET_MEMBER_MIN_AGE')
 ];

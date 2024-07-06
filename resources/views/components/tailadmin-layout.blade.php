@@ -7,7 +7,7 @@
     <title>
       eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template
     </title>
-    @vite(['resources/js/tailadmin/index.js'])
+    @vite(['resources/css/tailadmin/style.css', 'resources/js/tailadmin/index.js'])
   </head>
 
   <body
