@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ChangeName;
 use App\Models\Member;
+use App\Models\Payment;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -39,9 +40,14 @@ class DatabaseSeeder extends Seeder
 
         $members = collect();
         for($j=0; $j<100; $j++){
-            $members->add(Member::factory()->create([
+            $member = Member::factory()->create([
                 'user_id' => $users->random(),
-            ])) ;
+            ]);
+            $members->add( $member);
+
+            Payment::factory()->create([
+                'member_id' => $member->id
+            ]);
         }
         
 

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Member;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        Gate::define('edit-member', function(User $user, Member $member){
+            return $member->user->is($user);
+        });
     }
 }

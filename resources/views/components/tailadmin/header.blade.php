@@ -414,14 +414,11 @@
         >
           <span class="hidden text-right lg:block">
             <span class="block text-sm font-medium text-black dark:text-white"
-              >Thomas Anree</span
+              >{{ ucfirst(auth()->user()->first_name) }} {{ ucfirst(auth()->user()->last_name) }}</span
             >
-            <span class="block text-xs font-medium">UX Designer</span>
           </span>
 
-          <span class="h-12 w-12 rounded-full">
-            <img src="{{ Vite::asset('resources/images/tailadmin/user/user-01.png')}}" alt="User" />
-          </span>
+          
 
           <svg
             :class="dropdownOpen && 'rotate-180'"
@@ -451,7 +448,7 @@
           >
             <li>
               <a
-                href="profile.html"
+                href="{{ route('profile.edit') }}"
                 class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
                 <svg

@@ -60,6 +60,11 @@ flatpickr(".datepicker", {
   },
 });
 
+let defaultDate = "";
+if (document.getElementById('defaultDate')){
+  defaultDate = document.getElementById('defaultDate').value;
+}
+
 flatpickr(".form-datepicker", {
   mode: "single",
   static: true,
@@ -67,6 +72,7 @@ flatpickr(".form-datepicker", {
   //dateFormat: "M j, Y",
   altInput: true,
   altFormat: "Y-m-d",
+  defaultDate: defaultDate,
   allowInput: true,
   dateFormat: "Y-m-d",
   prevArrow:

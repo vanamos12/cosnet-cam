@@ -13,7 +13,6 @@
         </div>
 
         @unless(!count($members))
-
             <div
             class="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
             >
@@ -77,7 +76,7 @@
                     </td>
                     <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                         <div class="flex items-center space-x-3.5">
-                        <button class="hover:text-primary">
+                        <a href="{{ route('member.edit', $member) }}" class="hover:text-primary">
                             <svg
                             class="fill-current"
                             width="18"
@@ -95,7 +94,7 @@
                                 fill=""
                             />
                             </svg>
-                        </button>
+                        </a>
                         <button class="hover:text-primary">
                             <svg
                             class="fill-current"

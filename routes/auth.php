@@ -60,10 +60,10 @@ Route::middleware('auth')->controller(MemberController::class)->group(function (
     // Edit
     // Route::get('/jobs/{job}/edit', 'edit')->middleware(['auth', 'can:edit-job,job']);
     // Route::get('/jobs/{job}/edit', 'edit')->middleware('auth')->can('edit-job', 'job');
-    Route::get('/members/{member}/edit', 'edit')->can('edit', 'member')->name('member.edit');
+    Route::get('/members/{member}/edit', 'edit')->can('edit-member', 'member')->name('member.edit');
 
     // Update
-    Route::patch('/members/{member}', 'update')->name('member.update');
+    Route::patch('/members/{member}', 'update')->can('edit-member', 'member')->name('member.update');
 
     // Destroy
     Route::delete('/members/{member}', 'destroy')->name('member.destroy');

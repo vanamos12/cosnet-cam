@@ -196,6 +196,7 @@
         </div>
 
         <!-- Sign Up Form -->
+        <div>
         <div
             class="flex flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark"
         >
@@ -257,6 +258,7 @@
                 </button>
             </div>
             </form>
+        </div>
         </div>
         </div>
     </div>
