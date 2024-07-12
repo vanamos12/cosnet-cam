@@ -5,11 +5,18 @@
 
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <x-page-heading>Members</x-page-heading>
+            <div class="flex gap-4">
+            <a href="{{ route('member.create') }}"
+                class="flex py-3 px-6 font-bold  items-center justify-center rounded-md bg-secondary text-white hover:bg-opacity-90"
+            >
+            Pay {{ auth()->user()->total }}
+            </a>
             <a href="{{ route('member.create') }}"
                 class="flex py-3 px-6 font-bold  items-center justify-center rounded-md bg-primary text-white hover:bg-opacity-90"
             >
             Add Member
             </a>
+            </div>
         </div>
 
         @unless(!count($members))
@@ -39,6 +46,11 @@
                         class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white"
                     >
                         Membership Id
+                    </th>
+                    <th
+                        class="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white"
+                    >
+                        To Pay
                     </th>
                     <th class="px-4 py-4 font-medium text-black dark:text-white">
                         Actions
@@ -73,6 +85,9 @@
                         >
                         {{ $member->membershipid }}
                         </p>
+                    </td>
+                    <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                        <h5 class="font-medium text-black dark:text-white">{{ $member->amount}}</h5>
                     </td>
                     <td class="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                         <div class="flex items-center space-x-3.5">

@@ -3,11 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Money\Currency;
+use Money\Money;
 
 class User extends Authenticatable
 {
@@ -30,6 +34,16 @@ class User extends Authenticatable
         'email_verified_at',
         'remember_token',
     ];
+
+    public function total():Attribute{
+        return Attribute::make(
+            get: function(){
+                return $this->members->reduce(function(Money $total, Member $item){
+                    return $total->add($item->amount);
+                }, new Money(0, new Currency('USD')));
+            }
+        ); 
+    }
 
     public function members():HasMany{
         return $this->hasMany(Member::class);
